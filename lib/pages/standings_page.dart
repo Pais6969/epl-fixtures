@@ -6,6 +6,10 @@ import '../theme/app_theme.dart';
 import '../widgets/state_views.dart';
 import '../widgets/team_crest.dart';
 
+// Warna penanda zona klasemen.
+const Color _zoneChampionsLeague = Color(0xFF1E6FD9); // biru
+const Color _zoneEuropaLeague = Color(0xFFF28C28); // oranye
+
 class StandingsPage extends StatefulWidget {
   const StandingsPage({super.key, required this.service});
 
@@ -106,9 +110,9 @@ class _HeaderRow extends StatelessWidget {
     );
 
     Widget cell(String text, double width) => SizedBox(
-          width: width,
-          child: Text(text, textAlign: TextAlign.center, style: style),
-        );
+      width: width,
+      child: Text(text, textAlign: TextAlign.center, style: style),
+    );
 
     return Container(
       color: AppColors.chalk,
@@ -137,23 +141,28 @@ class _StandingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Penanda zona: 4 besar (Liga Champions) dan 3 terbawah (degradasi).
+    // Penanda zona:
+    // 1-4  : Liga Champions (biru)
+    // 5-7  : Europa League (oranye)
+    // 3 terbawah : degradasi (merah)
     final Color zone = row.position <= 4
-        ? AppColors.pitch
+        ? _zoneChampionsLeague
+        : row.position <= 7
+        ? _zoneEuropaLeague
         : row.position > total - 3
-            ? AppColors.red
-            : Colors.transparent;
+        ? AppColors.red
+        : Colors.transparent;
 
     Widget cell(String text, double width, {bool bold = false}) => SizedBox(
-          width: width,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: bold
-                ? AppTheme.numeric(size: 18)
-                : AppTheme.numeric(size: 16, weight: FontWeight.w500),
-          ),
-        );
+      width: width,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: bold
+            ? AppTheme.numeric(size: 18)
+            : AppTheme.numeric(size: 16, weight: FontWeight.w500),
+      ),
+    );
 
     final gd = row.goalDifference > 0
         ? '+${row.goalDifference}'
@@ -216,20 +225,21 @@ class _Legend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget item(Color color, String text) => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(width: 10, height: 10, color: color),
-            const SizedBox(width: 6),
-            Text(text,
-                style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-          ],
-        );
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(width: 10, height: 10, color: color),
+        const SizedBox(width: 6),
+        Text(text,
+            style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+      ],
+    );
 
     return Wrap(
       spacing: 16,
       runSpacing: 6,
       children: [
-        item(AppColors.pitch, '4 besar'),
+        item(_zoneChampionsLeague, 'Liga Champions'),
+        item(_zoneEuropaLeague, 'Europa League'),
         item(AppColors.red, 'Zona degradasi'),
         const Text(
           'Main, M = menang, S = seri, K = kalah, SG = selisih gol',

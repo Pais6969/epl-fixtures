@@ -57,7 +57,7 @@ lib/
 2. Daftar gratis di <https://www.football-data.org/client/register>, lalu salin **API token** dari email atau halaman akun.
 3. Clone repository ini:
    ```bash
-   git clone https://github.com/Pais69/epl-fixtures.git
+   git clone https://github.com/Pais6969/epl-fixtures.git
    cd utsprak
    flutter pub get
    ```
