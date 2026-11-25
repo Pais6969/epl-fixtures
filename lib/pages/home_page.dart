@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../services/football_api_service.dart';
 import 'fixtures_page.dart';
+import 'me_page.dart';
 import 'standings_page.dart';
+import 'stats_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final FootballApiService _service = FootballApiService();
+  final FootballApiService _service = FootballApiService.shared;
   int _index = 0;
 
   @override
@@ -25,6 +27,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           FixturesPage(service: _service),
           StandingsPage(service: _service),
+          StatsPage(service: _service),
+          const MePage(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -40,6 +44,17 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.leaderboard_outlined),
             selectedIcon: Icon(Icons.leaderboard),
             label: 'Klasemen',
+          ),
+          // [UAS] Tab baru
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart_outlined),
+            selectedIcon: Icon(Icons.bar_chart),
+            label: 'Statistik',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Saya',
           ),
         ],
       ),

@@ -11,6 +11,7 @@ class StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final Color fg;
     final Color bg;
     if (onDark) {
@@ -20,11 +21,11 @@ class StatusPill extends StatelessWidget {
       fg = AppColors.amber;
       bg = AppColors.amber.withAlpha(40);
     } else if (match.isFinished) {
-      fg = AppColors.muted;
-      bg = AppColors.ink.withAlpha(14);
+      fg = p.muted;
+      bg = p.ink.withAlpha(14);
     } else {
-      fg = AppColors.pitch;
-      bg = AppColors.pitch.withAlpha(26);
+      fg = p.accent;
+      bg = p.accent.withAlpha(26);
     }
 
     return Container(

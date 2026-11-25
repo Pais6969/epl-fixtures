@@ -8,33 +8,72 @@ import 'status_pill.dart';
 import 'team_crest.dart';
 
 class MatchCard extends StatelessWidget {
-  const MatchCard({super.key, required this.match, required this.onTap});
+  const MatchCard({
+    super.key,
+    required this.match,
+    required this.onTap,
+    this.favoriteTeamId,
+    this.hasReminder = false,
+  });
 
   final MatchModel match;
   final VoidCallback onTap;
 
+  /// [UAS] Kartu diberi tanda bila melibatkan klub favorit.
+  final int? favoriteTeamId;
+
+  /// [UAS] Ikon lonceng tampil bila pengingat sudah dipasang.
+  final bool hasReminder;
+
+  bool get _isFavorite =>
+      favoriteTeamId != null &&
+      (match.homeTeam.id == favoriteTeamId ||
+          match.awayTeam.id == favoriteTeamId);
+
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final radius = BorderRadius.circular(14);
 
     return Material(
-      color: Colors.white,
+      color: p.surface,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: radius,
-        side: const BorderSide(color: AppColors.line),
+        side: BorderSide(
+          color: _isFavorite ? AppColors.amber : p.line,
+          width: _isFavorite ? 1.5 : 1,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          child: Row(
-            children: [
-              Expanded(child: _TeamSide(team: match.homeTeam)),
-              SizedBox(width: 92, child: _Middle(match: match)),
-              Expanded(child: _TeamSide(team: match.awayTeam)),
-            ],
-          ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              child: Row(
+                children: [
+                  Expanded(child: _TeamSide(team: match.homeTeam)),
+                  SizedBox(width: 92, child: _Middle(match: match)),
+                  Expanded(child: _TeamSide(team: match.awayTeam)),
+                ],
+              ),
+            ),
+            if (_isFavorite || hasReminder)
+              Positioned(
+                top: 6,
+                right: 8,
+                child: Row(
+                  children: [
+                    if (_isFavorite)
+                      const Icon(Icons.star, size: 16, color: AppColors.amber),
+                    if (hasReminder)
+                      Icon(Icons.notifications_active,
+                          size: 16, color: p.accent),
+                  ],
+                ),
+              ),
+          ],
         ),
       ),
     );
